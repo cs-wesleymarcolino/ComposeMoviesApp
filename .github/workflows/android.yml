@@ -19,34 +19,10 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 11
-
-      - name: Generate cache key
-        run: ./scripts/checksum.sh $SAMPLE_PATH checksum.txt
-
-      - uses: actions/cache@v2
-        with:
-          path: |
-            ~/.gradle/caches/modules-*
-            ~/.gradle/caches/jars-*
-            ~/.gradle/caches/build-cache-*
-          key: gradle-${{ hashFiles('checksum.txt') }}
-
+          
       - name: Build project
         working-directory: ${{ env.SAMPLE_PATH }}
         run: ./gradlew assembleDebug
-
-      - name: Upload build outputs (APKs)
-        uses: actions/upload-artifact@v2
-        with:
-          name: build-outputs
-          path: ${{ env.SAMPLE_PATH }}/app/build/outputs
-
-      - name: Upload build reports
-        if: always()
-        uses: actions/upload-artifact@v2
-        with:
-          name: build-reports
-          path: ${{ env.SAMPLE_PATH }}/app/build/reports
 
   test:
     needs: build
@@ -64,17 +40,6 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 11
-
-      - name: Generate cache key
-        run: ./scripts/checksum.sh $SAMPLE_PATH checksum.txt
-
-      - uses: actions/cache@v2
-        with:
-          path: |
-            ~/.gradle/caches/modules-*
-            ~/.gradle/caches/jars-*
-            ~/.gradle/caches/build-cache-*
-          key: gradle-${{ hashFiles('checksum.txt') }}
 
       - name: Run instrumentation tests
         uses: reactivecircus/android-emulator-runner@v2
