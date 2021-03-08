@@ -44,10 +44,8 @@ jobs:
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: ${{ matrix.api-level }}
-          arch: x86
           disable-animations: true
-          script: ./gradlew connectedCheck --stacktrace
-          working-directory: ${{ env.SAMPLE_PATH }}
+          script: ./gradlew connectedCheck
 
       - name: Upload test reports
         if: always()
